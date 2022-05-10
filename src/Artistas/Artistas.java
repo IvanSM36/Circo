@@ -1,8 +1,9 @@
 package Artistas;
 
 public class Artistas {
-
-	public Artistas() {
+	
+	
+		public Artistas() {
 		// TODO Auto-generated constructor stub
 	}
 
