@@ -1,6 +1,6 @@
 package Animales;
 
-public class Animales {
+public class Animal {
 	// Artibutos
 	private String nombre;
 	private String tipo;
@@ -11,11 +11,12 @@ public class Animales {
 	private String nombrePista;
 	
 	// Constructores
-	public Animales(String nombre) {
+	// Siempre debe haber un constructor de la clave primaria en este caso nombre
+	public Animal(String nombre) {
 		this.nombre = nombre;
 	}
-
-	public Animales(String nombre, String tipo, int anios, float peso, float estatura, String nombreAtraccion, String nombrePista) {
+	//Siempre debe haber otro constructor con todos los parametros
+	public Animal(String nombre, String tipo, int anios, float peso, float estatura, String nombreAtraccion, String nombrePista) {
 		this.nombre = nombre;
 		this.tipo = tipo;
 		this.anios = anios;
