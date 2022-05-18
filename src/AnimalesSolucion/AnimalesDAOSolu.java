@@ -11,36 +11,33 @@ import java.util.ArrayList;
 public class AnimalesDAOSolu {
 
 	private Connection con;
-	private final String user = "MayteJava";
-	private final String pass = "140404";
-	private final String url = "jdbc:mysql://127.0.0.1:3306/circo2";
-	
-	
-	
+	private final String user = "root";
+	private final String pass = "admin";
+	private final String url = "jdbc:mysql://127.0.0.1:3306/circo";
+
 	/**
 	 * Constructor que establece directamente la conexion
 	 */
-	public AnimalesDAOSolu(){
+	public AnimalesDAOSolu() {
 		this.con = conectar();
 		System.out.println("Conexion realizada.\n");
 	}
-	
-	
+
 	/**
 	 * Metodo que se llama en el constructor y establece la conexion
+	 * 
 	 * @return
 	 */
 	private Connection conectar() {
 		Connection con = null;
 		try {
 			con = DriverManager.getConnection(url, user, pass);
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 		return con;
 	}
-	
-	
+
 	/**
 	 * metodo que cierra la conexion
 	 */
@@ -51,24 +48,22 @@ public class AnimalesDAOSolu {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	
+
 	/**
-	 * metodo para insertar en la base de datos un animal pasando por parametro un objeto animal
+	 * metodo para insertar en la base de datos un animal pasando por parametro un
+	 * objeto animal
+	 * 
 	 * @param nuevo
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public void create(AnimalesSolu nuevo) throws SQLException {
-		
-		
+
 		PreparedStatement stmt = null;
 		AnimalesSolu x = nuevo;
-		
+
 		if (nuevo != null) {
 			String sql = "INSERT INTO Animales VALUES (?,?,?,?,?,?,?)";
-			
+
 			try {
 				con.setAutoCommit(false);
 				stmt = con.prepareStatement(sql);
@@ -80,41 +75,41 @@ public class AnimalesDAOSolu {
 				stmt.setString(6, x.getNombre_atraccion());
 				stmt.setString(7, x.getNombre_pista());
 				stmt.executeUpdate();
-				con.commit(); 
+				con.commit();
 				con.setAutoCommit(true);
 				System.out.println("Animal insertado.");
-			}catch (SQLException e) {
+			} catch (SQLException e) {
 				con.rollback();
-			}finally {
+			} finally {
 				stmt.close();
 			}
 		}
 	}
-	
-	
+
 	/**
-	 * metodo que lee los datos de un animal pasando su primary key y los vuelca en un 
-	 * objeto animal nuevo y lo devuelve
+	 * metodo que lee los datos de un animal pasando su primary key y los vuelca en
+	 * un objeto animal nuevo y lo devuelve
+	 * 
 	 * @param nPK
 	 * @return animales
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public AnimalesSolu read(String nPK) throws SQLException {
-		
+
 		AnimalesSolu nuevo = null;
-		PreparedStatement stmt =null;
+		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		String sql = "SELECT * FROM Animales WHERE nombre = ?";
-		
+
 		try {
 			con.setAutoCommit(false);
 			stmt = con.prepareStatement(sql);
 			stmt.setString(1, nPK);
 			rs = stmt.executeQuery();
-			con.commit(); 
+			con.commit();
 			con.setAutoCommit(true);
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
 				String nombrePK = rs.getString(1);
 				String tipo = rs.getString(2);
 				int anhos = rs.getInt(3);
@@ -122,13 +117,13 @@ public class AnimalesDAOSolu {
 				float estatura = rs.getFloat(5);
 				String nombre_atraccion = rs.getString(6);
 				String nombre_pista = rs.getString(7);
-				nuevo = new AnimalesSolu(nombrePK, tipo, anhos,peso,estatura,nombre_atraccion, nombre_pista);
+				nuevo = new AnimalesSolu(nombrePK, tipo, anhos, peso, estatura, nombre_atraccion, nombre_pista);
 				System.out.println("Animal volcado");
 			}
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			con.rollback();
-		}finally {
+		} finally {
 			try {
 				stmt.close();
 				rs.close();
@@ -138,24 +133,22 @@ public class AnimalesDAOSolu {
 		}
 		return nuevo;
 	}
-	
-	
-	
-	
+
 	/**
 	 * metodo al que se le pasa un animal con los nuevos datos para hacer un update
 	 * OJO el nombre ya debe existir puesto que es un update
+	 * 
 	 * @param nuevo
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public void update(AnimalesSolu nuevo) throws SQLException {
-		
-		PreparedStatement stmt=null;
+
+		PreparedStatement stmt = null;
 		AnimalesSolu x = nuevo;
-		
+
 		if (nuevo != null) {
 			String sql = "UPDATE Animales SET tipo = ?, anhos = ?, peso = ?, estatura = ?, nombre_atraccion = ?, nombre_pista = ? WHERE nombre = ?";
-			
+
 			try {
 				stmt = con.prepareStatement(sql);
 				con.setAutoCommit(false);
@@ -167,71 +160,69 @@ public class AnimalesDAOSolu {
 				stmt.setString(6, x.getNombre_pista());
 				stmt.setString(7, x.getNombrePK());
 				stmt.executeUpdate();
-				con.commit(); 
+				con.commit();
 				con.setAutoCommit(true);
 				System.out.println("Animal modificado.");
-			}catch (SQLException e) {
+			} catch (SQLException e) {
 				con.rollback();
-			}finally {
+			} finally {
 				stmt.close();
-			}	
+			}
 		}
 	}
-	
-	
-	
+
 	/**
-	 * metodo para borrar animal pasando por parametro la pk que en este caso es el nombre
+	 * metodo para borrar animal pasando por parametro la pk que en este caso es el
+	 * nombre
+	 * 
 	 * @param nombrePK
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public void delete(String nombrePK) throws SQLException {
-		
+
 		String sql = "DELETE FROM Animales WHERE nombre = ?";
 		PreparedStatement stmt = null;
-		
+
 		try {
 			con.setAutoCommit(false);
 			stmt = con.prepareStatement(sql);
 			stmt.setString(1, nombrePK);
 			stmt.executeUpdate();
 			stmt.executeUpdate();
-			con.commit(); 
+			con.commit();
 			con.setAutoCommit(true);
 			System.out.println("Animal borrado.");
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			System.out.println("Error al borrar animal.");
 			con.rollback();
-		}finally {
+		} finally {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		
+
 	}
-	
-	
-	
+
 	/**
 	 * metodo que devuelve un arraylist con los animales de mas de 20 kilos de peso
+	 * 
 	 * @return arraylist<Animales>
 	 */
-	public ArrayList<AnimalesSolu> mas20(){
-		
+	public ArrayList<AnimalesSolu> mas20() {
+
 		ArrayList<AnimalesSolu> pesoMas20 = new ArrayList<>();
 		AnimalesSolu a = null;
-		String sql ="SELECT * FROM animales WHERE peso > 20";
+		String sql = "SELECT * FROM animales WHERE peso > 20";
 		Statement sent = null;
-		ResultSet rs =null;
-		
+		ResultSet rs = null;
+
 		try {
 			sent = con.createStatement();
 			rs = sent.executeQuery(sql);
-			
+
 			while (rs.next()) {
 				String nombrePK = rs.getString(1);
 				String tipo = rs.getString(2);
@@ -240,23 +231,22 @@ public class AnimalesDAOSolu {
 				float estatura = rs.getFloat(5);
 				String nombre_atraccion = rs.getString(6);
 				String nombre_pista = rs.getString(7);
-				a = new AnimalesSolu(nombrePK, tipo, anhos,peso,estatura,nombre_atraccion, nombre_pista);
+				a = new AnimalesSolu(nombrePK, tipo, anhos, peso, estatura, nombre_atraccion, nombre_pista);
 				pesoMas20.add(a);
 			}
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-		}finally {
+		} finally {
 			try {
 				sent.close();
 				rs.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			
+
 		}
 		return pesoMas20;
-		
+
 	}
-	
-	
+
 }
