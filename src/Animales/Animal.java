@@ -9,14 +9,19 @@ public class Animal {
 	private float estatura;
 	private String nombreAtraccion;
 	private String nombrePista;
-	
+
 	// Constructores
+	public Animal() {
+		
+	}
+	
 	// Siempre debe haber un constructor de la clave primaria en este caso nombre
 	public Animal(String nombre) {
 		this.nombre = nombre;
 	}
-	//Siempre debe haber otro constructor con todos los parametros
-	public Animal(String nombre, String tipo, int anios, float peso, float estatura, String nombreAtraccion, String nombrePista) {
+	// Siempre debe haber otro constructor con todos los parametros
+	public Animal(String nombre, String tipo, int anios, float peso, float estatura, String nombreAtraccion,
+			String nombrePista) {
 		this.nombre = nombre;
 		this.tipo = tipo;
 		this.anios = anios;
@@ -25,7 +30,7 @@ public class Animal {
 		this.nombreAtraccion = nombreAtraccion;
 		this.nombrePista = nombrePista;
 	}
-	
+
 	// Getters and Setters
 	public String getNombre() {
 		return nombre;
@@ -82,11 +87,7 @@ public class Animal {
 	public void setNombrePista(String nombrePista) {
 		this.nombrePista = nombrePista;
 	}
-	
-	// Metodos
-	
 
-	
-	
+	// Metodos
 
 }

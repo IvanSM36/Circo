@@ -7,12 +7,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+
+import AnimalesSolucion.AnimalesSolu;
 
 public class AnimalDAO {
 	// Metodos
 	// Crea una conexion con el SGBD y la devuelve
 	private static Connection conectar() {
-		Connection conexion = null ;
+		Connection conexion = null;
 		String url = "jdbc:mysql://localhost:3306/circo";
 		String usuario = "root";
 		String pass = "admin";
@@ -29,11 +32,10 @@ public class AnimalDAO {
 		// Si el animal pasado es nulo no haremos nada
 		if (animal != null) {
 			Connection conexion = conectar();
-			
-			String sql = "INSERT INTO circo.animales (nombre, tipo, anhos, peso, estatura, nombre_atraccion, nombre_pista)"
-					+ "				   VALUES (   ?,     ?,    ?,     ?,     ?,            ?,               ?    )";
+
+			String sql = "INSERT INTO circo.animales (nombre, tipo, anhos, peso, estatura, nombre_atraccion, nombre_pista) VALUES (?, ?, ?, ?, ?, ?, ?)";
 			try {
-				
+
 				PreparedStatement sentencia = conexion.prepareStatement(sql);
 				sentencia.setString(1, animal.getNombre());
 				sentencia.setString(2, animal.getTipo());
@@ -127,5 +129,37 @@ public class AnimalDAO {
 				}
 			}
 		}
+	}
+
+	public static ArrayList<Animal> mas20() {
+
+		ArrayList<Animal> pesoMas20 = new ArrayList<>();
+		Animal a = null;
+		String sql = "SELECT * FROM circo.animales WHERE peso > 20";
+
+		try {
+			Connection conexion = conectar();
+			PreparedStatement sentencia = conexion.prepareStatement(sql);
+			ResultSet rs = null;
+			rs = sentencia.executeQuery(sql);
+
+			while (rs.next()) {
+				String nombrePK = rs.getString(1);
+				String tipo = rs.getString(2);
+				int anhos = rs.getInt(3);
+				float peso = rs.getFloat(4);
+				float estatura = rs.getFloat(5);
+				String nombre_atraccion = rs.getString(6);
+				String nombre_pista = rs.getString(7);
+				a = new Animal(nombrePK, tipo, anhos, peso, estatura, nombre_atraccion, nombre_pista);
+				pesoMas20.add(a);
+			}
+			conexion.close();
+		} catch (SQLException e) {
+
+			System.out.println(e.getMessage());
+		}
+		return pesoMas20;
+
 	}
 }
